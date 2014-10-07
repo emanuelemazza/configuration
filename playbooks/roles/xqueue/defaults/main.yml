@@ -54,7 +54,7 @@ xqueue_env_config:
   XQUEUE_WORKERS_PER_QUEUE: 12
   LOGGING_ENV : $XQUEUE_LOGGING_ENV
   SYSLOG_SERVER: $XQUEUE_SYSLOG_SERVER
-  LOG_DIR : "{{ COMMON_DATA_DIR }}/logs/xqueue"
+  LOG_DIR : "{{ COMMON_LOG_DIR }}/xqueue"
   RABBIT_HOST : $XQUEUE_RABBITMQ_HOSTNAME
   S3_BUCKET : $XQUEUE_S3_BUCKET
   S3_PATH_PREFIX: $XQUEUE_S3_PATH_PREFIX
@@ -80,7 +80,7 @@ xqueue_source_repo: https://github.com/edx/xqueue.git
 xqueue_version: 'HEAD'
 xqueue_pre_requirements_file:    "{{ xqueue_code_dir }}/pre-requirements.txt"
 xqueue_post_requirements_file:   "{{ xqueue_code_dir }}/requirements.txt"
-
+xqueue_create_users: true
 
 # These packages are required for the xqueue server,
 # copied from the LMS role for now since there is a lot

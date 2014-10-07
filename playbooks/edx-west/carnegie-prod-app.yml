@@ -6,7 +6,7 @@
     when: "'app' not in machine"
   sudo: True
   vars:
-    secure_dir: '../../../configuration-secure/ansible'
+    secure_dir: '../../../edx-secret/ansible'
     # this indicates the path to site-specific (with precedence)
     # things like nginx template files
     #local_dir:  '../../../edx-secret/ansible/local'
@@ -17,10 +17,21 @@
     - "{{ secure_dir }}/vars/edxapp_carnegie_vars.yml"
     - "{{ secure_dir }}/vars/users.yml"
     - "{{ secure_dir }}/vars/edxapp_prod_users.yml"
+    - "{{ secure_dir }}/vars/datadog_carn.yml"
   roles:
     - common
     - supervisor
-    - {'role': 'nginx', 'nginx_conf': true}
+    - role: user
+      tags: users
+    - php
+    - role: nginx
+      nginx_sites:
+      - lms
+      - cms
+      - phpmyadmin
+      nginx_template_directory: "{{local_dir}}/nginx/templates/carnegie/"
     - {'role': 'edxapp', 'openid_workaround': true, 'template_subdir': 'carnegie'}
+    - datadog
+    #- splunkforwarder
     # run this role last
     # - in_production

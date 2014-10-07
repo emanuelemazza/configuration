@@ -28,6 +28,7 @@
 - name: Register the fact that apache role has run
   command: echo True
   register: apache_role_run
+  notify: restart apache
   tags:
     - apache
     - install

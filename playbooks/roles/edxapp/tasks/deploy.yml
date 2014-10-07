@@ -26,6 +26,16 @@
     force=yes owner={{ edxapp_user }} mode=0600
   when: EDXAPP_USE_GIT_IDENTITY
 
+- name: create directory for hostkey
+  file: >
+    dest="{{ edxapp_user_home_dir }}/.ssh"
+    mode=0700
+    owner={{ edxapp_user }}
+    group={{ edxapp_user }}
+    state=directory
+  sudo_user: "{{ edxapp_user }}"
+  when: EDXAPP_USE_GIT_IDENTITY
+
 # Do A Checkout
 - name: checkout edx-platform repo into {{edxapp_code_dir}}
   git: >
@@ -125,6 +135,25 @@
   - "restart edxapp"
   - "restart edxapp_workers"
 
+# Substitute github mirror in all requirements files
+- name: Updating requirement files for git mirror
+  command: |
+    /bin/sed -i -e 's/github\.com/{{ COMMON_GIT_MIRROR }}/g' {{ item }}
+  with_items:
+    - "{{ base_requirements_file }}"
+    - "{{ pre_requirements_file }}"
+    - "{{ post_requirements_file }}"
+      #    - "{{ repo_requirements_file }}"
+    - "{{ github_requirements_file }}"
+    - "{{ local_requirements_file }}"
+    - "{{ sandbox_base_requirements }}"
+    - "{{ sandbox_local_requirements }}"
+    - "{{ sandbox_post_requirements }}"
+  tags:
+    - lms
+    - cms
+    - install
+    - deploy
 
 # Install the python pre requirements into {{ edxapp_venv_dir }}
 - name : install python pre-requirements
@@ -342,7 +371,6 @@
   shell: cp /var/tmp/edxapp.req.new /var/tmp/edxapp.req.installed
   sudo_user: "{{ edxapp_user }}"
   notify: "restart edxapp"
-
 
 # https://code.launchpad.net/~wligtenberg/django-openid-auth/mysql_fix/+merge/22726
 # This is necessary for when syncdb is run and the django_openid_auth module is installed,

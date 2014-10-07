@@ -14,8 +14,10 @@ command={{ executable }} --preload -b {{ edxapp_lms_gunicorn_host }}:{{ edxapp_l
 
 user={{ common_web_user }}
 directory={{ edxapp_code_dir }}
+<<<<<<< HEAD
 environment={% if COMMON_ENABLE_NEWRELIC %}NEW_RELIC_APP_NAME={{ EDXAPP_NEWRELIC_LMS_APPNAME }},NEW_RELIC_LICENSE_KEY={{ NEWRELIC_LICENSE_KEY }},{% endif -%}  PORT={{edxapp_lms_gunicorn_port}},ADDRESS={{edxapp_lms_gunicorn_host}},LANG={{ EDXAPP_LANG }},DJANGO_SETTINGS_MODULE={{ edxapp_lms_env }},SERVICE_VARIANT="lms"
-stdout_logfile={{ supervisor_log_dir }}/%(program_name)-stdout.log
-stderr_logfile={{ supervisor_log_dir }}/%(program_name)-stderr.log
+stdout_logfile={{ supervisor_log_dir }}/%(program_name)s-stdout.log
+stderr_logfile={{ supervisor_log_dir }}/%(program_name)s-stderr.log
+>>>>>>> 36e17525e27f1b6ffcb5f1e336e3004ff17e8d01
 killasgroup=true
 stopasgroup=true
